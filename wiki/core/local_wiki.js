@@ -100,9 +100,12 @@ function open(pagename){
 
 
     //ファイル名、更新日時等を付与
-    id('FileName').innerText = getFilePathAndName(pagename);
-    id('DateCreated').innerText = "作成日時:" + getDateCreated(pagename);
-    id('DateLastModified').innerText = "更新日時:" + getDateLastModified(pagename);
+    if(CONFIG.showFileInfo == true)
+    {
+	    id('FileName').innerText = getFilePathAndName(pagename);
+	    id('DateCreated').innerText = "作成日時:" + getDateCreated(pagename);
+	    id('DateLastModified').innerText = "更新日時:" + getDateLastModified(pagename);
+	}
 
     //表示履歴
     setHistory(pagename);
@@ -116,6 +119,10 @@ function open(pagename){
 //履歴保存
 function setHistory(pagename) {
 
+    if(CONFIG.showHistory== false)
+    {
+        return;
+    }
     //スタックに履歴を保存
     if (0 == pageNameStack.length) {
         //初回は無条件で保存
@@ -136,6 +143,10 @@ function setHistory(pagename) {
 }
 
 function getHistory() {
+    if(CONFIG.showHistory== false)
+    {
+        return;
+    }
     //スタック内の履歴を表示
     var html = "表示履歴："
     for (var i = 0; i < pageNameStack.length; i++) {
@@ -434,7 +445,7 @@ function DeletePage() {
 
         fso.DeleteFile(filepath);
         window.alert(pagename + ' を削除しました。'); 
-        open('トップページ');
+        openTopPage();
     }
     else {
         window.alert('キャンセルされました。'); // 警告ダイアログを表示
@@ -484,3 +495,34 @@ function utf8_saveToFile(filename, text) {
 	stm.SaveToFile(filename, 2); // force overwrite
 	stm.Close();
 };
+
+//TopPageを表示する
+function openTopPage(){
+    open(CONFIG.topPage);
+}
+
+function initNavigation(){
+    marked.setOptions({
+        image_base: CONFIG.base_dirctory +"/"
+    })
+
+
+    id('topPageLinkA').innerText = CONFIG.topPage;
+    id('editLinkA').innerText = VALUES.editTitle;
+    id('PagelistLinkA').innerText = VALUES.pagelistTitle;
+    id('SarchLinkA').innerText = VALUES.sarchTitle;
+
+    id('newPageLinkA').innerText = VALUES.newPageTitle;
+    id('renamePageLinkA').innerText = VALUES.reNamePageTitle;
+    id('deletePageLinkA').innerText = VALUES.deletePageTitle;
+
+    if(CONFIG.showHistory == false)
+    {
+        id('HRhistry').style.display = "none";
+    }
+    if(CONFIG.showFileInfo == false)
+    {
+        id('HRfileinfo').style.display = "none"
+    }
+    openTopPage();
+}

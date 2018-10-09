@@ -10,41 +10,57 @@
 <script src="./core/jquery-1.12.4.js"></script>
 <script src="./core/marked.js"></script>
 
+<script src="./config.js"></script>
 <script src="./core/local_wiki.js"></script>
 
 
 </head>
-<body onload="javascript:open('トップページ')">
-    <table width="100%" border="0">
-        <tr valign="top">
-            <td class="style1">
-                <h1 id="headerH1">トップページ</h1>
-            </td>
-            <td id="TDheaderH1" align="right">
-                <span><a href="javascript:open('トップページ')">トップページ</a>|</span>
-                <span id="editLink"><a href="javascript:editCurrentPage()" >編集</a>|</span>
-                <span><a href="javascript:openIndexPage()">ページ一覧</a>|</span>
-                <input id="Text1" type="text" /> <a href="javascript:FindIndexPage()">検索</a>
-            </td>
-        </tr>
-    </table>
-    <hr id=" br1" />
-    <div id="content"></div>       
-    <hr id="br2" />
-    <div id="FileName" align=left ></div>
-    <div id="DateCreated" align=left ></div>
-    <div id="DateLastModified" align=left ></div>
-    <hr id="br2" />
-    <div id="history" align=left ></div>       
-    <table width="100%" border="0">
-        <tr valign="bottom">
-            <td align="right">
-                <span>&nbsp;<input id="Text2" type="text" /> |</span>
-                <span><a href="javascript:NewPage()">新規作成</a>|</span>
-                <a href="javascript:ReNamePage()">リネーム</a><span>|</span>
-                <a href="javascript:DeletePage()">削除</a>
-            </td>
-        </tr>
-    </table>
+<body onload="javascript:initNavigation()">
+
+<!-- ==================================================================== 
+    Header Area
+===================================================================== -->
+<div id="header">
+    <span><a href="javascript:openTopPage()" id="topPageLinkA">toppage</a>|</span>
+    <span id="editLink"><a href="javascript:editCurrentPage()" id="editLinkA">edit</a>|</span>
+    <span ><a href="javascript:openIndexPage()" id="PagelistLinkA">list</a>|</span>
+    <input id="Text1" type="text" style="width: 150px;" /> <a href="javascript:FindIndexPage()" id="SarchLinkA">sarch</a>
+        <span >&nbsp;<input id="Text2" type="text" style="width: 150px;"/> |</span>
+            <span><a href="javascript:NewPage()" id="newPageLinkA">newpage</a>|</span>
+            <a href="javascript:ReNamePage()" id="renamePageLinkA">rename</a><span>|</span>
+            <a href="javascript:DeletePage()" id="deletePageLinkA">delete</a>
+            <h1 id="headerH1">this will be overwritten by page name</h1>
+</div><!-- / #header -->
+    
+<!-- ==================================================================== 
+    main Area
+===================================================================== -->
+<div id="contents">
+<div id="main">
+    <div class="entry" id="content"></div>
+</div><!-- / #main -->
+
+<!-- ==================================================================== 
+    Side Menu Area
+===================================================================== -->
+<div id="sideWrap">
+<div id="side">
+<div id="toc">目次aaa</div>
+</div><!-- / #side -->
+</div><!-- / #sideWrap -->
+
+</div><!-- / #contents -->
+
+<!-- ==================================================================== 
+    Footer Area
+===================================================================== -->
+<div id="footer">
+        <hr id="HRfileinfo" />
+        <div id="FileName" align=left ></div>
+        <div id="DateCreated" align=left ></div>
+        <div id="DateLastModified" align=left ></div>
+        <hr id="HRhistry" />
+        <div id="history" align=left ></div>  
+</div><!-- / #footer -->
 </body>
 </html>
