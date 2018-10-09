@@ -281,7 +281,7 @@ function viweCreatedList(myFiles,title){
 
 //ページ一覧画面を表示する
 function openIndexPage(){
-    var openIndexPageName = '【ページ一覧】';
+    var openIndexPageName = VALUES.pagelistTitle;
     var myFiles = getPageList();
     viweCreatedList(myFiles,openIndexPageName);
 }
