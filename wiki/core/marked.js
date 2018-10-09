@@ -461,7 +461,7 @@ var inline = {
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
   text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/,
-  WindowsSV: /^<(\\\\.+)>/ //HTA‘Î‰‚É‚æ‚é‰ü‘¢@windows ”Ä—p–½–¼‹K‘¥ (UNC)‚æ‚è<\\ƒT[ƒo[–¼\xxxx> ‚¾‚ÆƒŠƒ“ƒN 
+  WindowsSV: /^<(\\\\.+)>/ //HTAå¯¾å¿œã«ã‚ˆã‚‹æ”¹é€ ã€€windows æ±ç”¨å‘½åè¦å‰‡ (UNC)ã‚ˆã‚Š<\\ã‚µãƒ¼ãƒãƒ¼å\xxxx> ã ã¨ãƒªãƒ³ã‚¯ 
 };
 
 inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -570,8 +570,8 @@ InlineLexer.prototype.output = function(src) {
   while (src) {
 
 
-     //HTA‘Î‰
-    //WindowsSV <\\ƒT[ƒo–¼\xxx>
+     //HTAå¯¾å¿œ
+    //WindowsSV <\\ã‚µãƒ¼ãƒå\xxx>
     if (cap = this.rules.WindowsSV.exec(src)) {
 //      alert("cap[0] " + cap[0]);
 //      alert("cap[1] " + cap[1]);
@@ -885,11 +885,11 @@ Renderer.prototype.del = function(text) {
   return '<del>' + text + '</del>';
 };
 
-//HTA‘Î‰‚É‚æ‚éC³
-//d—l’Ç‰Á@ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚ğŠJ‚­
-//d—l’Ç‰Á@ƒtƒ@ƒCƒ‹ƒT[ƒo(\\ƒT[ƒo–¼)‚ğŠJ‚­
-//d—l•ÏX@target="_blank" ‚ğ’Ç‰Á‚µAƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚ğŠJ‚­ˆÈŠO‚Íƒuƒ‰ƒEƒU‚Ö—U“±
-//d—l•ÏX@target="_blank" ‚ğ’Ç‰Á‚µAŠg’£q(.xxx)•tƒtƒ@ƒCƒ‹‚Íwindows‚Ì§Œä‚É‚Ü‚©‚¹‚½ƒtƒ@ƒCƒ‹‚ğŠJ‚­
+//HTAå¯¾å¿œã«ã‚ˆã‚‹ä¿®æ­£
+//ä»•æ§˜è¿½åŠ ã€€ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
+//ä»•æ§˜è¿½åŠ ã€€ãƒ•ã‚¡ã‚¤ãƒ«ã‚µãƒ¼ãƒ(\\ã‚µãƒ¼ãƒå)ã‚’é–‹ã
+//ä»•æ§˜å¤‰æ›´ã€€target="_blank" ã‚’è¿½åŠ ã—ã€ãƒ†ã‚­ã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãä»¥å¤–ã¯ãƒ–ãƒ©ã‚¦ã‚¶ã¸èª˜å°
+//ä»•æ§˜å¤‰æ›´ã€€target="_blank" ã‚’è¿½åŠ ã—ã€æ‹¡å¼µå­(.xxx)ä»˜ãƒ•ã‚¡ã‚¤ãƒ«ã¯windowsã®åˆ¶å¾¡ã«ã¾ã‹ã›ãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 
 Renderer.prototype.link = function(href, title, text) {
   if (this.options.sanitize) {
@@ -913,7 +913,7 @@ Renderer.prototype.link = function(href, title, text) {
       }
       out += '>' + text + '</a>';
 
-//      alert("HTA‘Î‰‚É‚æ‚é‰ü‘¢@mailto|http|https|ftp|Notes|file= " + out);
+//      alert("HTAå¯¾å¿œã«ã‚ˆã‚‹æ”¹é€ ã€€mailto|http|https|ftp|Notes|file= " + out);
 
   }else if( href.match(/^\\(\\).+/ig )){
 
@@ -923,11 +923,11 @@ Renderer.prototype.link = function(href, title, text) {
       }
       out += '>' + text + '</a>';
 
-//      alert("HTA‘Î‰‚É‚æ‚é‰ü‘¢@ƒT[ƒo‘Î‰ " + out + "  text=" + text + "  title=" + title );
+//      alert("HTAå¯¾å¿œã«ã‚ˆã‚‹æ”¹é€ ã€€ã‚µãƒ¼ãƒå¯¾å¿œ " + out + "  text=" + text + "  title=" + title );
 
   }else if( href.match(/\.([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/ig)){
 
-//      alert("HTA‘Î‰‚É‚æ‚é‰ü‘¢@Šeíƒtƒ@ƒCƒ‹Šg’£q‘Î‰ " + out + "  text=" + text + "  title=" + title );
+//      alert("HTAå¯¾å¿œã«ã‚ˆã‚‹æ”¹é€ ã€€å„ç¨®ãƒ•ã‚¡ã‚¤ãƒ«æ‹¡å¼µå­å¯¾å¿œ " + out + "  text=" + text + "  title=" + title );
 
       var out = '<a href="' + href + '"' + ' target="_blank" '; ;
       if (title) {
@@ -939,14 +939,14 @@ Renderer.prototype.link = function(href, title, text) {
   }else if( href.match(/^(?:[\w]\:|\\)(\\[a-z_\-\s0-9\.]+)/ig)){
 
 
-//      alert("HTA‘Î‰‚É‚æ‚é‰ü‘¢@ƒtƒ@ƒCƒ‹‚ğŠJ‚­2(windowsƒtƒHƒ‹ƒ_ƒpƒX)= " + out + "  text=" + text + "  title=" + title + "href=" + href );
+//      alert("HTAå¯¾å¿œã«ã‚ˆã‚‹æ”¹é€ ã€€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã2(windowsãƒ•ã‚©ãƒ«ãƒ€ãƒ‘ã‚¹)= " + out + "  text=" + text + "  title=" + title + "href=" + href );
       var ss = href.split("\\");
       var out =  "<a href='javascript:OpenFolder(\"" + ss + "\")'>" + text + "</a> ";
 
 //      var out =  xxx + text + "</a> ";
   }else{
       var out =  "<a href='javascript:open(\"" + href + "\")'>" + text + "</a> ";
-//      alert("HTA‘Î‰‚É‚æ‚é‰ü‘¢@ƒtƒ@ƒCƒ‹‚ğŠJ‚­3= " + out);
+//      alert("HTAå¯¾å¿œã«ã‚ˆã‚‹æ”¹é€ ã€€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã3= " + out);
   }
 
 //  var out = '<a href="' + href + '"';

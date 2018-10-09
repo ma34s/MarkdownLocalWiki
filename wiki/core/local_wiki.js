@@ -1,19 +1,49 @@
-//ƒOƒ[ƒoƒ‹•Ï”‚ğİ’è
+/*------------------------------------------------------------------**
+	Definition Value of VBScript
+**------------------------------------------------------------------*/
+// ä¿å­˜ãƒ‡ãƒ¼ã‚¿ã®ç¨®é¡
+		// StreamTypeEnum
+		// http://msdn.microsoft.com/ja-jp/library/cc389884.aspx
+var adTypeBinary = 1; // ãƒã‚¤ãƒŠãƒª
+var adTypeText   = 2; // ãƒ†ã‚­ã‚¹ãƒˆ
+
+// èª­ã¿è¾¼ã¿æ–¹æ³•
+		// StreamReadEnum
+		// http://msdn.microsoft.com/ja-jp/library/cc389881.aspx
+var adReadAll  = -1; // å…¨è¡Œ
+var adReadLine = -2; // ä¸€è¡Œã”ã¨
+
+// æ›¸ãè¾¼ã¿æ–¹æ³•
+		// StreamWriteEnum
+		// http://msdn.microsoft.com/ja-jp/library/cc389886.aspx
+var adWriteChar = 0; // æ”¹è¡Œãªã—
+var adWriteLine = 1; // æ”¹è¡Œã‚ã‚Š
+
+// ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜æ–¹æ³•
+		// SaveOptionsEnum 
+		// http://msdn.microsoft.com/ja-jp/library/cc389870.aspx
+var adSaveCreateNotExist  = 1; // ãªã„å ´åˆã¯æ–°è¦ä½œæˆ
+var adSaveCreateOverWrite = 2; // ã‚ã‚‹å ´åˆã¯ä¸Šæ›¸ã
+
+/*------------------------------------------------------------------**
+	Local Wiki
+**------------------------------------------------------------------*/
+//ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã‚’è¨­å®š
 var fso = new ActiveXObject("Scripting.FileSystemObject");
 var oBaseFolder = getBaseFolder();
 var pageNameStack = new Array();
 
-//‚±‚ÌHTMLƒtƒ@ƒCƒ‹‚ª’u‚©‚ê‚Ä‚¢‚éƒtƒHƒ‹ƒ_‚ÌƒpƒX–¼‚ğæ“¾‚·‚é
+//ã“ã®HTMLãƒ•ã‚¡ã‚¤ãƒ«ãŒç½®ã‹ã‚Œã¦ã„ã‚‹ãƒ•ã‚©ãƒ«ãƒ€ã®ãƒ‘ã‚¹åã‚’å–å¾—ã™ã‚‹
 function getBaseFolder(){
     return fso.GetFolder(".");
 }
 
 
-//ƒGƒNƒXƒvƒ[ƒ‰‚ÅƒtƒHƒ‹ƒ_Eƒtƒ@ƒCƒ‹‚ğŠJ‚­
+//ã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ã§ãƒ•ã‚©ãƒ«ãƒ€ãƒ»ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 function OpenFolder(Path){
  //   alert(Path);
    var ss = Path.split(',');
-   //  ShellŠÖ˜A‚Ì‘€ì‚ğ’ñ‹Ÿ‚·‚éƒIƒuƒWƒFƒNƒg‚»‚Ì2‚ğæ“¾
+   //  Shellé–¢é€£ã®æ“ä½œã‚’æä¾›ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãã®2ã‚’å–å¾—
    var sh = new ActiveXObject( "Shell.Application" );
    var Path2 = "";
 
@@ -26,13 +56,13 @@ function OpenFolder(Path){
    }
 //  alert(Path2);
 
-   //ƒGƒNƒXƒvƒ[ƒ‰‚ÅŠJ‚­
+   //ã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ã§é–‹ã
    sh.Open(Path2);
-   //  ƒIƒuƒWƒFƒNƒg‚ğ‰ğ•ú
+   //  ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è§£æ”¾
    sh = null;
 }
 
-//ƒy[ƒW–¼‚ğw’è‚µ‚Äƒy[ƒW‚ğŠJ‚­
+//ãƒšãƒ¼ã‚¸åã‚’æŒ‡å®šã—ã¦ãƒšãƒ¼ã‚¸ã‚’é–‹ã
 function open(pagename){
     var content = getContent(pagename);
     if(! content){
@@ -63,18 +93,18 @@ function open(pagename){
 //    var html = marked(content, { renderer: renderer });
 
 
-    //‚¢‚í‚ä‚émarked.js‚ğg—piˆê•”‰ü‘¢j
+    //ã„ã‚ã‚†ã‚‹marked.jsã‚’ä½¿ç”¨ï¼ˆä¸€éƒ¨æ”¹é€ ï¼‰
     var html = marked(content);
 
 
 
 
-    //ƒtƒ@ƒCƒ‹–¼AXV“ú“™‚ğ•t—^
+    //ãƒ•ã‚¡ã‚¤ãƒ«åã€æ›´æ–°æ—¥æ™‚ç­‰ã‚’ä»˜ä¸
     id('FileName').innerText = getFilePathAndName(pagename);
-    id('DateCreated').innerText = "ì¬“ú:" + getDateCreated(pagename);
-    id('DateLastModified').innerText = "XV“ú:" + getDateLastModified(pagename);
+    id('DateCreated').innerText = "ä½œæˆæ—¥æ™‚:" + getDateCreated(pagename);
+    id('DateLastModified').innerText = "æ›´æ–°æ—¥æ™‚:" + getDateLastModified(pagename);
 
-    //•\¦—š—ğ
+    //è¡¨ç¤ºå±¥æ­´
     setHistory(pagename);
     getHistory();
     
@@ -83,15 +113,15 @@ function open(pagename){
     showEditLink();
 }
 
-//—š—ğ•Û‘¶
+//å±¥æ­´ä¿å­˜
 function setHistory(pagename) {
 
-    //ƒXƒ^ƒbƒN‚É—š—ğ‚ğ•Û‘¶
+    //ã‚¹ã‚¿ãƒƒã‚¯ã«å±¥æ­´ã‚’ä¿å­˜
     if (0 == pageNameStack.length) {
-        //‰‰ñ‚Í–³ğŒ‚Å•Û‘¶
+        //åˆå›ã¯ç„¡æ¡ä»¶ã§ä¿å­˜
         pageNameStack.push(pagename);
     } else {
-        //•Û‘¶‚³‚ê‚Ä‚¢‚é—š—ğŠO‚Ì‚İ•Û‘¶
+        //ä¿å­˜ã•ã‚Œã¦ã„ã‚‹å±¥æ­´å¤–ã®ã¿ä¿å­˜
         var matched = false;
         for (var i = 0; i < pageNameStack.length; i++) {
             var tmp = pageNameStack[i];
@@ -106,8 +136,8 @@ function setHistory(pagename) {
 }
 
 function getHistory() {
-    //ƒXƒ^ƒbƒN“à‚Ì—š—ğ‚ğ•\¦
-    var html = "•\¦—š—ğF"
+    //ã‚¹ã‚¿ãƒƒã‚¯å†…ã®å±¥æ­´ã‚’è¡¨ç¤º
+    var html = "è¡¨ç¤ºå±¥æ­´ï¼š"
     for (var i = 0; i < pageNameStack.length; i++) {
         var tmp = pageNameStack[i];
         html = html + "<a href='javascript:open(\"" + tmp + "\")'>" + tmp + "</a> ";
@@ -116,7 +146,7 @@ function getHistory() {
     id('history').innerHTML = html;
 }
 
-//ƒ}[ƒNƒ_ƒEƒ“imd)ƒtƒ@ƒCƒ‹–¼‚ğƒtƒ‹ƒpƒX‚Åæ“¾
+//ãƒãƒ¼ã‚¯ãƒ€ã‚¦ãƒ³ï¼ˆmd)ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ãƒ•ãƒ«ãƒ‘ã‚¹ã§å–å¾—
 function getFilePathAndName(pagename){
     var s = '';
     var filepath = getFilePath(pagename);
@@ -125,7 +155,7 @@ function getFilePathAndName(pagename){
     return(s);
 }
 
-//ƒtƒ@ƒCƒ‹‚Ìì¬“ú‚ğæ“¾‚·‚é
+//ãƒ•ã‚¡ã‚¤ãƒ«ã®ä½œæˆæ—¥æ™‚ã‚’å–å¾—ã™ã‚‹
 function getDateCreated(pagename){
    var s = '';
    var filepath = getFilePath(pagename);
@@ -135,7 +165,7 @@ function getDateCreated(pagename){
    return(s);
 
 }
-//ƒtƒ@ƒCƒ‹‚ÌXV“ú‚ğæ“¾‚·‚é
+//ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›´æ–°æ—¥æ™‚ã‚’å–å¾—ã™ã‚‹
 function getDateLastModified(pagename) {
     var s = '';
     var filepath = getFilePath(pagename);
@@ -145,20 +175,20 @@ function getDateLastModified(pagename) {
     return (s);
 }
 
-//ƒy[ƒW–¼‚ğw’è‚µ‚Äƒy[ƒW‚ğ•ÒW‚·‚é
+//ãƒšãƒ¼ã‚¸åã‚’æŒ‡å®šã—ã¦ãƒšãƒ¼ã‚¸ã‚’ç·¨é›†ã™ã‚‹
 function edit(pagename){
     var content = getContent(pagename);
 
 //    var html =
 //           "<form  onsubmit='save(\"" + pagename + "\"); return false;'>"
 //         + "<textarea cols='120' rows='30' id='textarea' wrap='off'>" + content + "</textarea><br />"
-//         + "<input type='submit' value='•Û‘¶'><br />"
+//         + "<input type='submit' value='ä¿å­˜'><br />"
 //         + "</form>";
-//•ÒW•û–@‚ÌC³ textarea‚Ö‚ÌŠi”[‚ÍƒtƒH[ƒ€¶¬Œã‚Ìtextarea‚ÖƒeƒLƒXƒg“ü—Í
+//ç·¨é›†æ–¹æ³•ã®ä¿®æ­£ textareaã¸ã®æ ¼ç´ã¯ãƒ•ã‚©ãƒ¼ãƒ ç”Ÿæˆå¾Œã®textareaã¸ãƒ†ã‚­ã‚¹ãƒˆå…¥åŠ›
     var html =
            "<form  onsubmit='save(\"" + pagename + "\"); return false;'>"
          + "<textarea cols='120' rows='30' id='textarea' wrap='off'>" + "</textarea><br />"
-         + "<input type='submit' value='•Û‘¶'><br />"
+         + "<input type='submit' value='ä¿å­˜'><br />"
          + "</form>";
 
 
@@ -168,47 +198,46 @@ function edit(pagename){
     hideEditLink();
 }
 
-//‚¢‚ÜŒ©‚Ä‚¢‚éƒy[ƒW‚ğ•ÒW‚·‚é
+//ã„ã¾è¦‹ã¦ã„ã‚‹ãƒšãƒ¼ã‚¸ã‚’ç·¨é›†ã™ã‚‹
 function editCurrentPage(){
     pagename = id('headerH1').innerText;
     edit(pagename);
 }
 
-//ƒtƒH[ƒ€‚ÌƒeƒLƒXƒgƒGƒŠƒA‚Ì’†g‚ğAw’è‚µ‚½ƒy[ƒW‚ÌƒRƒ“ƒeƒ“ƒc‚Æ‚µ‚Ä•Û‘¶‚·‚é
+//ãƒ•ã‚©ãƒ¼ãƒ ã®ãƒ†ã‚­ã‚¹ãƒˆã‚¨ãƒªã‚¢ã®ä¸­èº«ã‚’ã€æŒ‡å®šã—ãŸãƒšãƒ¼ã‚¸ã®ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã¨ã—ã¦ä¿å­˜ã™ã‚‹
 function save(pagename){
 
-//•ÒW•û–@‚ÌC³ textarea‚Ö‚ÌŠi”[‚ÍƒtƒH[ƒ€¶¬Œã‚Ìtextarea‚ÖƒeƒLƒXƒg“ü—Í
+//ç·¨é›†æ–¹æ³•ã®ä¿®æ­£ textareaã¸ã®æ ¼ç´ã¯ãƒ•ã‚©ãƒ¼ãƒ ç”Ÿæˆå¾Œã®textareaã¸ãƒ†ã‚­ã‚¹ãƒˆå…¥åŠ›
 //    var content = id('textarea').value;
     var content = id('textarea').innerText;
 
     var filepath = getFilePath(pagename);
     var file = fso.createTextFile(filepath);
-    file.write(content);
-    file.Close();
+    utf8_saveToFile(filepath, content);
     open(pagename);
 
 }
 
-//ƒy[ƒWˆê——‰æ–Ê‚ğ•\¦‚·‚é
+//ãƒšãƒ¼ã‚¸ä¸€è¦§ç”»é¢ã‚’è¡¨ç¤ºã™ã‚‹
 function openIndexPage(){
 
-    var openIndexPageName = 'yƒy[ƒWˆê——z';
+    var openIndexPageName = 'ã€ãƒšãƒ¼ã‚¸ä¸€è¦§ã€‘';
     var enuFiles = new Enumerator(oBaseFolder.Files);
     
     var myFiles = [];
     for (; !enuFiles.atEnd(); enuFiles.moveNext() ){ 
             var FilePath = enuFiles.item(); 
-            var ExtensionName = fso.GetExtensionName(FilePath); // Šg’£q‚ğæ“¾
-            var BaseName = fso.GetBaseName(FilePath); // ƒx[ƒXƒl[ƒ€‚ğæ“¾
-            if(ExtensionName == "md"){ // Šg’£q‚ªmd‚¾‚Á‚½‚ç
+            var ExtensionName = fso.GetExtensionName(FilePath); // æ‹¡å¼µå­ã‚’å–å¾—
+            var BaseName = fso.GetBaseName(FilePath); // ãƒ™ãƒ¼ã‚¹ãƒãƒ¼ãƒ ã‚’å–å¾—
+            if(ExtensionName == "md"){ // æ‹¡å¼µå­ãŒmdã ã£ãŸã‚‰
                 myFiles.push(BaseName);
             }
     }
     
     var list = [];
-    list.push('|ƒtƒ@ƒCƒ‹–¼|ì¬“ú|XV“ú|');
+    list.push('|ãƒ•ã‚¡ã‚¤ãƒ«å|ä½œæˆæ—¥|æ›´æ–°æ—¥|');
     list.push('|:-|:-:|:-:|');
-    //ƒtƒ@ƒCƒ‹•Û‘¶—pA•\¦—p‚ÌƒtƒH[ƒ}ƒbƒg•ÏŠ·
+    //ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜ç”¨ã€è¡¨ç¤ºç”¨ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆå¤‰æ›
     for(var i = 0; i < myFiles.length; i++){
 //        list.push('<li><a href="javascript:open(\'' + myFiles[i] + '\');">' + myFiles[i] + '</a></li>');
 //        list.push('<li>[' + myFiles[i] + '](' + myFiles[i] + ')</li>' );
@@ -217,105 +246,99 @@ function openIndexPage(){
 
     var content = list.join("\r\n");
 
-    //ƒtƒ@ƒCƒ‹•Û‘¶
+    //ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜
     var filepath = getFilePath( openIndexPageName );
-    var file = fso.createTextFile(filepath);
-    file.write(content);
-    file.Close();
+    utf8_saveToFile(filepath, content);
 
 
-    //‚¢‚í‚ä‚émarked.js‚ğg—piˆê•”‰ü‘¢j
+    //ã„ã‚ã‚†ã‚‹marked.jsã‚’ä½¿ç”¨ï¼ˆä¸€éƒ¨æ”¹é€ ï¼‰
     var html = marked(content);
 
-    //•\¦—š—ğ
+    //è¡¨ç¤ºå±¥æ­´
     setHistory( openIndexPageName );
     getHistory();
 
-    //•\¦
+    //è¡¨ç¤º
     setPageName( openIndexPageName );
     setContent( html );
     showEditLink();
 
 }
 
-//ƒy[ƒW–¼‚ğw’è‚µ‚ÄAŠY“–‚·‚éƒ}[ƒNƒ_ƒEƒ“i.md)‚ÌƒpƒX–¼‚ğæ“¾‚·‚é
+//ãƒšãƒ¼ã‚¸åã‚’æŒ‡å®šã—ã¦ã€è©²å½“ã™ã‚‹ãƒãƒ¼ã‚¯ãƒ€ã‚¦ãƒ³ï¼ˆ.md)ã®ãƒ‘ã‚¹åã‚’å–å¾—ã™ã‚‹
 function getFilePath(pagename){
     var filename = pagename + ".md";
     return oBaseFolder.Path + "\\" +  filename;
 }
 
-//ƒy[ƒW–¼‚ğw’è‚µ‚ÄAŠY“–‚·‚éƒ}[ƒNƒ_ƒEƒ“ƒtƒ@ƒCƒ‹‚Ì’†g‚ğæ“¾‚·‚é
+//ãƒšãƒ¼ã‚¸åã‚’æŒ‡å®šã—ã¦ã€è©²å½“ã™ã‚‹ãƒãƒ¼ã‚¯ãƒ€ã‚¦ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¸­èº«ã‚’å–å¾—ã™ã‚‹
 function getContent(pagename){
     var content = '';
     var filepath = getFilePath(pagename);
 
     if(fso.fileExists(filepath)){
-        var file = fso.openTextFile(filepath);
-        if(! file.atEndOfStream){
-            content = file.readAll();
-        }
-        file.Close();
+        content = utf8_readAll(filepath);
     }
     return content;
 }
 
-//ƒƒjƒ…[‚Ìu•ÒWvƒŠƒ“ƒN‚ğ•\¦‚·‚é
+//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã€Œç·¨é›†ã€ãƒªãƒ³ã‚¯ã‚’è¡¨ç¤ºã™ã‚‹
 function showEditLink() {
     id('editLink').style.display = "inline";
 }
 
-//ƒƒjƒ…[‚Ìu•ÒWvƒŠƒ“ƒN‚ğ”ñ•\¦‚É‚·‚é
+//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ã€Œç·¨é›†ã€ãƒªãƒ³ã‚¯ã‚’éè¡¨ç¤ºã«ã™ã‚‹
 function hideEditLink() {
     id('editLink').style.display = "none";
 }
 
-//ƒRƒ“ƒeƒ“ƒc‚ğ‰æ–Ê‚É•\¦‚·‚é
+//ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ã‚’ç”»é¢ã«è¡¨ç¤ºã™ã‚‹
 function setContent(html) {
     id('content').innerHTML = html;
 }
 
-//ƒy[ƒW–¼‚ğ‰æ–Ê‚É•\¦‚·‚é
+//ãƒšãƒ¼ã‚¸åã‚’ç”»é¢ã«è¡¨ç¤ºã™ã‚‹
 function setPageName(pagename) {
     if(pagename){
         id('headerH1').innerText = pagename;
     }
 }
 
-//‰æ–Ê‚Ìƒy[ƒW–¼‚ğæ“¾‚·‚é
+//ç”»é¢ã®ãƒšãƒ¼ã‚¸åã‚’å–å¾—ã™ã‚‹
 function getPageName() {
     return id('headerH1').innerText;
         
 }
-//HTML‚Ì—v‘f‚ğæ“¾‚·‚é
+//HTMLã®è¦ç´ ã‚’å–å¾—ã™ã‚‹
 function id(s) {
     return document.getElementById(s);
 }
 
-//ŒŸõ‚Éƒqƒbƒg‚µ‚½ƒy[ƒW‚Ìˆê——‰æ–Ê‚ğ•\¦‚·‚é
+//æ¤œç´¢ã«ãƒ’ãƒƒãƒˆã—ãŸãƒšãƒ¼ã‚¸ã®ä¸€è¦§ç”»é¢ã‚’è¡¨ç¤ºã™ã‚‹
 function FindIndexPage() {
     var enuFiles = new Enumerator(oBaseFolder.Files);
     var myFiles = [];
-    var FindIndexPageName = 'yŒŸõŒ‹‰Êz';
+    var FindIndexPageName = 'ã€æ¤œç´¢çµæœã€‘';
 
     for (; !enuFiles.atEnd(); enuFiles.moveNext()) {
         var FilePath = enuFiles.item();
-        var ExtensionName = fso.GetExtensionName(FilePath); // Šg’£q‚ğæ“¾
-        var BaseName = fso.GetBaseName(FilePath); // ƒx[ƒXƒl[ƒ€‚ğæ“¾
+        var ExtensionName = fso.GetExtensionName(FilePath); // æ‹¡å¼µå­ã‚’å–å¾—
+        var BaseName = fso.GetBaseName(FilePath); // ãƒ™ãƒ¼ã‚¹ãƒãƒ¼ãƒ ã‚’å–å¾—
 
-        if (ExtensionName == "md") { // Šg’£q‚ªmd‚¾‚Á‚½‚ç
-            //ƒtƒ@ƒCƒ‹–¼ŒŸõ
+        if (ExtensionName == "md") { // æ‹¡å¼µå­ãŒmdã ã£ãŸã‚‰
+            //ãƒ•ã‚¡ã‚¤ãƒ«åæ¤œç´¢
             var database = FilePath;
             var sword = Text1.value;
             var check = BaseName.indexOf(sword, 0);
             if (0 <= check) {
-                //ƒtƒ@ƒCƒ‹–¼‚ğŠi”[
+                //ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´
                 myFiles.push(BaseName);
             }
             else {
-                //ƒtƒ@ƒCƒ‹‚Ì’†g‚ğŒŸõ
+                //ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¸­èº«ã‚’æ¤œç´¢
                 if (0 <= openAndSerch(BaseName) )
                 {
-                    //ƒtƒ@ƒCƒ‹–¼‚ğŠi”[
+                    //ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æ ¼ç´
                     myFiles.push(BaseName);
                 }
             }
@@ -323,7 +346,7 @@ function FindIndexPage() {
     }
     
     var list = [];
-    list.push('|ƒtƒ@ƒCƒ‹–¼|ì¬“ú|XV“ú|');
+    list.push('|ãƒ•ã‚¡ã‚¤ãƒ«å|ä½œæˆæ—¥|æ›´æ–°æ—¥|');
     list.push('|:-|:-:|:-:|');
     for (var i = 0; i < myFiles.length; i++) {
 //        list.push('<li><a href="javascript:open(\'' + myFiles[i] + '\');">' + myFiles[i] + '</a></li>');
@@ -333,40 +356,40 @@ function FindIndexPage() {
 
     }
     var content = list.join("\r\n");
-    //ƒtƒ@ƒCƒ‹•Û‘¶
-    var filepath = getFilePath(@FindIndexPageName  + Text1.value@);
+    //ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜
+    var filepath = getFilePath(ã€€FindIndexPageName  + Text1.valueã€€);
     var file = fso.createTextFile(filepath);
     file.write(content);
     file.Close();
 
-    //‚¢‚í‚ä‚émarked.js‚ğg—piˆê•”‰ü‘¢j
+    //ã„ã‚ã‚†ã‚‹marked.jsã‚’ä½¿ç”¨ï¼ˆä¸€éƒ¨æ”¹é€ ï¼‰
     var html = marked(content);
 
-    //•\¦—š—ğ‚ğŠi”[A•\¦
+    //è¡¨ç¤ºå±¥æ­´ã‚’æ ¼ç´ã€è¡¨ç¤º
     setHistory( FindIndexPageName  + Text1.value );
     getHistory();
     
-    //•\¦
+    //è¡¨ç¤º
     setPageName( FindIndexPageName  + Text1.value );
     setContent( html );
     showEditLink();
 
 }
 
-//ƒy[ƒW–¼‚ğw’è‚µ‚Äƒy[ƒW‚ğŠJ‚«AŒŸõ•¶š‚ªƒqƒbƒg‚µ‚½‚©ƒ`ƒFƒbƒN‚·‚é
+//ãƒšãƒ¼ã‚¸åã‚’æŒ‡å®šã—ã¦ãƒšãƒ¼ã‚¸ã‚’é–‹ãã€æ¤œç´¢æ–‡å­—ãŒãƒ’ãƒƒãƒˆã—ãŸã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 function openAndSerch(pagename) {
     var content = getContent(pagename);
     if (!content) {
         return edit(pagename);
     }
-    //ƒtƒ@ƒCƒ‹–¼ŒŸõ
+    //ãƒ•ã‚¡ã‚¤ãƒ«åæ¤œç´¢
     var database = content;
     var sword = Text1.value;
     var check = database.indexOf(sword, 0);
     return check
 }
 
-//V‹Kì¬
+//æ–°è¦ä½œæˆ
 function NewPage() {
     var pagename = Text2.value;
 //    window.confirm(pagename);
@@ -375,47 +398,89 @@ function NewPage() {
     }
     Text2.value = '';
 }
-//ƒŠƒl[ƒ€
+//ãƒªãƒãƒ¼ãƒ 
 function ReNamePage() {
 
     var srcPagename = getPageName();
     var dstPagename = Text2.value;
 
-    // uOKv‚Ìˆ—ŠJn { Šm”Fƒ_ƒCƒAƒƒO‚Ì•\¦
-    if (window.confirm(dstPagename + ' ‚ÉƒŠƒl[ƒ€‚µ‚Ü‚·‚©H'))
+    // ã€ŒOKã€æ™‚ã®å‡¦ç†é–‹å§‹ ï¼‹ ç¢ºèªãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
+    if (window.confirm(dstPagename + ' ã«ãƒªãƒãƒ¼ãƒ ã—ã¾ã™ã‹ï¼Ÿ'))
     {
 
         var srcFilepath = getFilePath(srcPagename);
         var dstFilepath = getFilePath(dstPagename);
     
         fso.MoveFile(srcFilepath, dstFilepath);
-        window.alert(srcPagename + ' ‚ğ ' + dstPagename + ' ‚ÉƒŠƒl[ƒ€‚µ‚Ü‚µ‚½B');         
+        window.alert(srcPagename + ' ã‚’ ' + dstPagename + ' ã«ãƒªãƒãƒ¼ãƒ ã—ã¾ã—ãŸã€‚');         
         open(dstPagename);
     }
     else {
-        window.alert('ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½B'); // Œxƒ_ƒCƒAƒƒO‚ğ•\¦
+        window.alert('ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¾ã—ãŸã€‚'); // è­¦å‘Šãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
     }
     Text2.value = '';
 }
 
-//íœ
+//å‰Šé™¤
 function DeletePage() {
 
     var pagename = getPageName();
 
-    // uOKv‚Ìˆ—ŠJn { Šm”Fƒ_ƒCƒAƒƒO‚Ì•\¦
-    if (window.confirm(pagename + ' ‚ğíœ‚µ‚Ü‚·‚©H')) {
+    // ã€ŒOKã€æ™‚ã®å‡¦ç†é–‹å§‹ ï¼‹ ç¢ºèªãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®è¡¨ç¤º
+    if (window.confirm(pagename + ' ã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ')) {
 
         var pagename = getPageName();
         var filepath = getFilePath(pagename);
 
         fso.DeleteFile(filepath);
-        window.alert(pagename + ' ‚ğíœ‚µ‚Ü‚µ‚½B'); 
-        open('ƒgƒbƒvƒy[ƒW');
+        window.alert(pagename + ' ã‚’å‰Šé™¤ã—ã¾ã—ãŸã€‚'); 
+        open('ãƒˆãƒƒãƒ—ãƒšãƒ¼ã‚¸');
     }
     else {
-        window.alert('ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½B'); // Œxƒ_ƒCƒAƒƒO‚ğ•\¦
+        window.alert('ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¾ã—ãŸã€‚'); // è­¦å‘Šãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
     }
     Text2.value = '';
 }
 
+function utf8_readAll(filename){
+    var sr = new ActiveXObject("ADODB.Stream");
+    sr.Type = adTypeText;
+    sr.charset = "utf-8";
+    sr.Open();
+    sr.LoadFromFile( filename );
+    var temp = sr.ReadText( adReadAll );
+    sr.Close();
+    return temp;
+}
+
+
+function utf8_saveToFile(filename, text) {
+	// ADODB.Streamã®ãƒ¢ãƒ¼ãƒ‰
+	var adTypeBinary = 1;
+	var adTypeText = 2;
+	// ADODB.Streamã‚’ä½œæˆ
+	var pre = new ActiveXObject("ADODB.Stream");
+	// æœ€åˆã¯ãƒ†ã‚­ã‚¹ãƒˆãƒ¢ãƒ¼ãƒ‰ã§UTF-8ã§æ›¸ãè¾¼ã‚€
+	pre.Type = adTypeText;
+	pre.Charset = 'UTF-8';
+	pre.Open();
+	pre.WriteText(text);
+	// ãƒã‚¤ãƒŠãƒªãƒ¢ãƒ¼ãƒ‰ã«ã™ã‚‹ãŸã‚ã«Positionã‚’ä¸€åº¦0ã«æˆ»ã™
+	// Readã™ã‚‹ãŸã‚ã«ã¯ãƒã‚¤ãƒŠãƒªã‚¿ã‚¤ãƒ—ã§ãªã„ã¨ã„ã‘ãªã„
+	pre.Position = 0;
+	pre.Type = adTypeBinary;
+	// Positionã‚’3ã«ã—ã¦ã‹ã‚‰èª­ã¿è¾¼ã‚€ã“ã¨ã§æœ€åˆã®3ãƒã‚¤ãƒˆã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹
+	// ã¤ã¾ã‚ŠBOMã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ã¾ã™
+	pre.Position = 3;
+	var bin = pre.Read();
+	pre.Close();
+
+	// èª­ã¿è¾¼ã‚“ã ãƒã‚¤ãƒŠãƒªãƒ‡ãƒ¼ã‚¿ã‚’ãƒã‚¤ãƒŠãƒªãƒ‡ãƒ¼ã‚¿ã¨ã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«ã«å‡ºåŠ›ã™ã‚‹
+	// ã“ã“ã¯ä¸€èˆ¬çš„ãªæ›¸ãæ–¹ãªã®ã§èª¬æ˜ã‚’çœç•¥
+	var stm = new ActiveXObject("ADODB.Stream");
+	stm.Type = adTypeBinary;
+	stm.Open();
+	stm.Write(bin);
+	stm.SaveToFile(filename, 2); // force overwrite
+	stm.Close();
+};
