@@ -19,6 +19,30 @@ function getBaseFolder(){
     return fso.GetFolder(".");
 }
 
+
+//エクスプローラでフォルダ・ファイルを開く
+function OpenFolder(Path){
+ //   alert(Path);
+   var ss = Path.split(',');
+   //  Shell関連の操作を提供するオブジェクトその2を取得
+   var sh = new ActiveXObject( "Shell.Application" );
+   var Path2 = "";
+
+//     alert(ss.length);
+
+   for(var i=0; i < ss.length; i++){
+      if(!(ss[i] == "")){
+        Path2 += ss[i] + '\\';
+      };
+   }
+//  alert(Path2);
+
+   //エクスプローラで開く
+   sh.Open(Path2);
+   //  オブジェクトを解放
+   sh = null;
+}
+
 //ページ名を指定してページを開く
 function open(pagename){
     var content = getContent(pagename);

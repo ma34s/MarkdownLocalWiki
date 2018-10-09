@@ -461,7 +461,7 @@ var inline = {
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
   text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/,
-  WindowsSV:  /^(\\\\.+?[\s|\n|\b|$]|^(\\\\.+))/ //HTA対応による改造　windows 汎用命名規則 (UNC)より先頭が\\だとダイレクトリンク
+  WindowsSV: /^<(\\\\.+)>/ //HTA対応による改造　windows 汎用命名規則 (UNC)より<\\サーバー名\xxxx> だとリンク 
 };
 
 inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -569,12 +569,15 @@ InlineLexer.prototype.output = function(src) {
 
   while (src) {
 
+
      //HTA対応
-    //WindowsSV 
+    //WindowsSV <\\サーバ名\xxx>
     if (cap = this.rules.WindowsSV.exec(src)) {
 //      alert("cap[0] " + cap[0]);
+//      alert("cap[1] " + cap[1]);
+//      alert("cap[2] " + cap[2]);
       src = src.substring(cap[0].length);
-      text = cap[0];
+      text = cap[1];
       href = text;
       out += this.renderer.link(href, null, text);
       continue;
@@ -698,6 +701,8 @@ InlineLexer.prototype.output = function(src) {
       out += this.renderer.text(escape(this.smartypants(cap[0])));
       continue;
     }
+
+
 
 
     if (src) {
@@ -930,10 +935,18 @@ Renderer.prototype.link = function(href, title, text) {
       }
       out += '>' + text + '</a>';
 
+//  }else if( href.match(/^[a-zA-z]\:\\.+/ig)){
+  }else if( href.match(/^(?![*?<>|])[a-zA-Z!-~]/ig)){
+
+
+//      alert("HTA対応による改造　ファイルを開く2(windowsフォルダパス)= " + out + "  text=" + text + "  title=" + title + "href=" + href );
+      var ss = href.split("\\");
+      var out =  "<a href='javascript:OpenFolder(\"" + ss + "\")'>" + text + "</a> ";
+
+//      var out =  xxx + text + "</a> ";
   }else{
       var out =  "<a href='javascript:open(\"" + href + "\")'>" + text + "</a> ";
-//      alert("HTA対応による改造　ファイルを開く2= " + out);
-
+//      alert("HTA対応による改造　ファイルを開く3= " + out);
   }
 
 //  var out = '<a href="' + href + '"';
