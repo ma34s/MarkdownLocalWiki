@@ -35,7 +35,7 @@ var pageNameStack = new Array();
 
 //このHTMLファイルが置かれているフォルダのパス名を取得する
 function getBaseFolder(){
-    return fso.GetFolder(".");
+    return fso.GetFolder(CONFIG.base_dirctory);
 }
 
 
