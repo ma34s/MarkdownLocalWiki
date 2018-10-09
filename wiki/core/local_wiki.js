@@ -103,10 +103,10 @@ function open(pagename){
     if(CONFIG.showFileInfo == true)
     {
 	    id('FileName').innerText = getFilePathAndName(pagename);
-	    id('DateCreated').innerText = "作成日時:" + getDateCreated(pagename);
-	    id('DateLastModified').innerText = "更新日時:" + getDateLastModified(pagename);
+	    id('DateCreated').innerText = VALUES.PageCreateDateTitle+":" + getDateCreated(pagename);
+	    id('DateLastModified').innerText = VALUES.PageUpdateDateTitle+":" + getDateLastModified(pagename);
 	}
-
+    
     //表示履歴
     setHistory(pagename);
     getHistory();
@@ -149,7 +149,7 @@ function getHistory() {
         return;
     }
     //スタック内の履歴を表示
-    var html = "表示履歴："
+    var html = VALUES.HistoryTitle + ":"
     for (var i = 0; i < pageNameStack.length; i++) {
         var tmp = pageNameStack[i];
         html = html + "<a href='javascript:open(\"" + tmp + "\")'>" + tmp + "</a> ";
@@ -289,7 +289,12 @@ function getPageList(isToc){
 //ページ一覧/検索画面を表示する
 function viweCreatedList(myFiles,title){
     var list = [];
-    list.push('|ファイル名|作成日|更新日|');
+    
+    var listHeader  = "|"+VALUES.ListFileNameTitle
+                    + "|"+VALUES.ListCreateDateTitle
+                    + "|"+VALUES.ListUpdateDateTitle;
+                    + "|"
+    list.push(listHeader);
     list.push('|:-|:-:|:-:|');
     //ファイル保存用、表示用のフォーマット変換
     for(var i = 0; i < myFiles.length; i++){
@@ -398,7 +403,7 @@ function id(s) {
 function FindIndexPage() {
     var enuFiles = new Enumerator(oBaseFolder.Files);
     var myFiles = [];
-    var FindIndexPageName = '【検索結果】';
+    var FindIndexPageName = VALUES.FindTitle;
 
     for (; !enuFiles.atEnd(); enuFiles.moveNext()) {
         var FilePath = enuFiles.item();
