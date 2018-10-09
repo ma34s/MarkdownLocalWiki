@@ -230,11 +230,9 @@ function save(pagename){
 }
 
 //ページ一覧画面を表示する
-function openIndexPage(){
-
-    var openIndexPageName = '【ページ一覧】';
+function getPageIndex(){
     var enuFiles = new Enumerator(oBaseFolder.Files);
-    
+   
     var myFiles = [];
     for (; !enuFiles.atEnd(); enuFiles.moveNext() ){ 
             var FilePath = enuFiles.item(); 
@@ -244,7 +242,17 @@ function openIndexPage(){
                 myFiles.push(BaseName);
             }
     }
-    
+    return myFiles;
+}
+
+//ページ一覧画面を表示する
+function openIndexPage(){
+    var openIndexPageName = '【ページ一覧】';
+    var myFiles = getPageIndex();
+    viweCreatedList(myFiles,openIndexPageName);
+}
+
+function viweCreatedList(myFiles,title){
     var list = [];
     list.push('|ファイル名|作成日|更新日|');
     list.push('|:-|:-:|:-:|');
@@ -257,24 +265,25 @@ function openIndexPage(){
 
     var content = list.join("\r\n");
 
-    //ファイル保存
-    var filepath = getFilePath( openIndexPageName );
-    utf8_saveToFile(filepath, content);
-
+    if(CONFIG.showHistory==true)
+    {//ファイル保存
+        var filepath = getFilePath( title );
+        utf8_saveToFile(filepath, content);
+    }
 
     //いわゆるmarked.jsを使用（一部改造）
     var html = marked(content);
 
     //表示履歴
-    setHistory( openIndexPageName );
+    setHistory( title );
     getHistory();
 
     //表示
-    setPageName( openIndexPageName );
+    setPageName( title );
     setContent( html );
     showEditLink();
-
 }
+
 
 //ページ名を指定して、該当するマークダウン（.md)のパス名を取得する
 function getFilePath(pagename){
