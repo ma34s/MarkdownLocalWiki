@@ -2,8 +2,8 @@
 	Wiki Config
 **------------------------------------------------------------------*/
 var CONFIG = {
-    topPage: 'トップページ',
-    base_dirctory: '.',
+    topPage: 'top_page',
+    base_dirctory: './doc',
     showHistory: true,
     showFileInfo: true
 }
