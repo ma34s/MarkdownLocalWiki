@@ -341,6 +341,11 @@ function hideEditLink() {
 //コンテンツを画面に表示する
 function setContent(html) {
     id('content').innerHTML = html;
+    
+    //ハイライト対応
+    $('#content pre code').each(function(i, e) {
+         hljs.highlightBlock(e, e.className);
+    });
 }
 
 //ページ名を画面に表示する
