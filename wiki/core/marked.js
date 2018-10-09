@@ -936,7 +936,7 @@ Renderer.prototype.link = function(href, title, text) {
       out += '>' + text + '</a>';
 
 //  }else if( href.match(/^[a-zA-z]\:\\.+/ig)){
-  }else if( href.match(/^(?![*?<>|])[a-zA-Z!-~]/ig)){
+  }else if( href.match(/^(?:[\w]\:|\\)(\\[a-z_\-\s0-9\.]+)/ig)){
 
 
 //      alert("HTA対応による改造　ファイルを開く2(windowsフォルダパス)= " + out + "  text=" + text + "  title=" + title + "href=" + href );
