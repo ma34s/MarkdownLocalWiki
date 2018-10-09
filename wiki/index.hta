@@ -1,0 +1,404 @@
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<html lang="ja">
+<head>
+<hta:application navigable="yes">
+
+<link rel="stylesheet" href="./core/github.css">
+<script src="./core/jquery-1.12.0.js"></script>
+<script src="./core/marked.js"></script>
+<script>
+
+//グローバル変数を設定
+var fso = new ActiveXObject("Scripting.FileSystemObject");
+var oBaseFolder = getBaseFolder();
+var pageNameStack = new Array();
+
+//このHTMLファイルが置かれているフォルダのパス名を取得する
+function getBaseFolder(){
+    return fso.GetFolder(".");
+}
+
+//ページ名を指定してページを開く
+function open(pagename){
+    var content = getContent(pagename);
+    if(! content){
+        return edit(pagename);
+    }
+
+    //いわゆるmarked.jsを使用（一部改造）
+    var html = marked(content);
+
+    //ファイル名、更新日時等を付与
+    id('FileName').innerText = getFilePathAndName(pagename);
+    id('DateCreated').innerText = getDateCreated(pagename);
+    id('DateLastModified').innerText = getDateLastModified(pagename);
+
+    //表示履歴
+    setHistory(pagename);
+    getHistory();
+    
+    setPageName(pagename);
+    setContent(html);
+    showEditLink();
+}
+
+//履歴保存
+function setHistory(pagename) {
+
+    //スタックに履歴を保存
+    if (0 == pageNameStack.length) {
+        //初回は無条件で保存
+        pageNameStack.push(pagename);
+    } else {
+        //保存されている履歴外のみ保存
+        var matched = false;
+        for (var i = 0; i < pageNameStack.length; i++) {
+            var tmp = pageNameStack[i];
+            if (tmp == pagename) {
+                matched = true;
+            }
+        }
+        if (matched == false) {
+            pageNameStack.push(pagename);
+        }
+    }
+}
+
+function getHistory() {
+    //スタック内の履歴を表示
+    var html = "表示履歴："
+    for (var i = 0; i < pageNameStack.length; i++) {
+        var tmp = pageNameStack[i];
+        html = html + "<a href='javascript:open(\"" + tmp + "\")'>" + tmp + "</a> ";
+    }
+    html = html + " ";
+    id('history').innerHTML = html;
+}
+
+//テキストファイル名をフルパスで取得
+function getFilePathAndName(pagename){
+    var s = '';
+    var filepath = getFilePath(pagename);
+    var f = fso.GetFile(filepath);
+    s = f.Path ;
+    return(s);
+}
+
+//ファイルの作成日時を取得する
+function getDateCreated(pagename){
+   var s = '';
+   var filepath = getFilePath(pagename);
+   var f = fso.GetFile(filepath);
+   var CreateDate = new Date(f.DateCreated);
+   s += "作成日時:" + CreateDate.toLocaleDateString() + " " + CreateDate.toLocaleTimeString();  
+   return(s);
+
+}
+//ファイルの更新日時を取得する
+function getDateLastModified(pagename) {
+    var s = '';
+    var filepath = getFilePath(pagename);
+    var f = fso.GetFile(filepath);
+    var ModDate = new Date(f.DateLastModified);
+    s += "更新日時:" + ModDate.toLocaleDateString() + " " + ModDate.toLocaleTimeString();
+    return (s);
+}
+
+//ページ名を指定してページを編集する
+function edit(pagename){
+    var content = getContent(pagename);
+
+    var html =
+           "<form  onsubmit='save(\"" + pagename + "\"); return false;'>"
+         + "<textarea cols='120' rows='30' id='textarea' wrap='off'>" + content + "</textarea><br />"
+         + "<input type='submit' value='保存'><br />"
+         + "</form>";
+
+    setPageName(pagename);
+    setContent(html);
+    hideEditLink();
+}
+
+//いま見ているページを編集する
+function editCurrentPage(){
+    pagename = id('headerH1').innerText;
+    edit(pagename);
+}
+
+//フォームのテキストエリアの中身を、指定したページのコンテンツとして保存する
+function save(pagename){
+
+    var content = id('textarea').value;
+    var filepath = getFilePath(pagename);
+    var file = fso.createTextFile(filepath);
+    file.write(content);
+    file.Close();
+    open(pagename);
+
+}
+
+//ページ一覧画面を表示する
+function openIndexPage(){
+
+    var openIndexPageName = '【ページ一覧】';
+    var enuFiles = new Enumerator(oBaseFolder.Files);
+    
+    var myFiles = [];
+    for (; !enuFiles.atEnd(); enuFiles.moveNext() ){ 
+            var FilePath = enuFiles.item(); 
+            var ExtensionName = fso.GetExtensionName(FilePath); // 拡張子を取得
+            var BaseName = fso.GetBaseName(FilePath); // ベースネームを取得
+            if(ExtensionName == "txt"){ // 拡張子がtxtだったら
+                myFiles.push(BaseName);
+            }
+    }
+    
+    var list = [];
+    var list2 = [];
+
+    for(var i = 0; i < myFiles.length; i++){
+        list.push('<li><a href="javascript:open(\'' + myFiles[i] + '\');">' + myFiles[i] + '</a></li>');
+        list2.push("<li>[[" + myFiles[i] + "]]</li>" );
+    }
+
+    var content = list.join("\n");
+    var content2 = list2.join("\r\n");
+
+    //ファイル保存
+    var filepath = getFilePath( openIndexPageName );
+    var file = fso.createTextFile(filepath);
+    file.write(content2);
+    file.Close();
+
+    //履歴格納
+    content = '<pre>' + content + '</pre>';
+    //ファイル名、更新日時等を付与
+    content = content + getDateCreated( openIndexPageName );
+    //表示履歴
+    setHistory( openIndexPageName );
+    getHistory();
+
+    //表示
+    setPageName( openIndexPageName );
+    setContent( content );
+    showEditLink();
+
+}
+
+//ページ名を指定して、該当するテキストファイルのパス名を取得する
+function getFilePath(pagename){
+    var filename = pagename + ".txt";
+    return oBaseFolder.Path + "\\" +  filename;
+}
+
+//ページ名を指定して、該当するテキストファイルの中身を取得する
+function getContent(pagename){
+    var content = '';
+    var filepath = getFilePath(pagename);
+
+    if(fso.fileExists(filepath)){
+        var file = fso.openTextFile(filepath);
+        if(! file.atEndOfStream){
+            content = file.readAll();
+        }
+        file.Close();
+    }
+    return content;
+}
+
+//メニューの「編集」リンクを表示する
+function showEditLink() {
+    id('editLink').style.display = "inline";
+}
+
+//メニューの「編集」リンクを非表示にする
+function hideEditLink() {
+    id('editLink').style.display = "none";
+}
+
+//コンテンツを画面に表示する
+function setContent(html) {
+    id('content').innerHTML = html;
+}
+
+//ページ名を画面に表示する
+function setPageName(pagename) {
+    if(pagename){
+        id('headerH1').innerText = pagename;
+    }
+}
+
+//画面のページ名を取得する
+function getPageName() {
+    return id('headerH1').innerText;
+        
+}
+//HTMLの要素を取得する
+function id(s) {
+    return document.getElementById(s);
+}
+
+//検索にヒットしたページの一覧画面を表示する
+function FindIndexPage() {
+    var enuFiles = new Enumerator(oBaseFolder.Files);
+    var myFiles = [];
+    var FindIndexPageName = '【検索結果】';
+
+    for (; !enuFiles.atEnd(); enuFiles.moveNext()) {
+        var FilePath = enuFiles.item();
+        var ExtensionName = fso.GetExtensionName(FilePath); // 拡張子を取得
+        var BaseName = fso.GetBaseName(FilePath); // ベースネームを取得
+
+        if (ExtensionName == "txt") { // 拡張子がtxtだったら
+            //ファイル名検索
+            var database = FilePath;
+            var sword = Text1.value;
+            var check = BaseName.indexOf(sword, 0);
+            if (0 <= check) {
+                //ファイル名を格納
+                myFiles.push(BaseName);
+            }
+            else {
+                //ファイルの中身を検索
+                if (0 <= openAndSerch(BaseName) )
+                {
+                    //ファイル名を格納
+                    myFiles.push(BaseName);
+                }
+            }
+        }
+    }
+    
+    var list = [];
+    var list2 = [];
+    for (var i = 0; i < myFiles.length; i++) {
+        list.push('<li><a href="javascript:open(\'' + myFiles[i] + '\');">' + myFiles[i] + '</a></li>');
+        list2.push("<li>[[" + myFiles[i] + "]]</li>" );
+    }
+    var content = list.join("\r\n");
+    var content2 = list2.join("\r\n");
+
+    //ファイル保存
+    var filepath = getFilePath(　FindIndexPageName  + Text1.value　);
+    var file = fso.createTextFile(filepath);
+    file.write(content2);
+    file.Close();
+
+    //履歴格納
+    content = '<pre>' + content + '</pre>';
+    //ファイル名、更新日時等を付与
+    content = content + getDateCreated( FindIndexPageName  + Text1.value );
+    //表示履歴
+    setHistory( FindIndexPageName  + Text1.value );
+    getHistory();
+    
+    //表示
+    setPageName( FindIndexPageName  + Text1.value );
+    setContent( content );
+    showEditLink();
+
+}
+
+//ページ名を指定してページを開き、検索文字がヒットしたかチェックする
+function openAndSerch(pagename) {
+    var content = getContent(pagename);
+    if (!content) {
+        return edit(pagename);
+    }
+    //ファイル名検索
+    var database = content;
+    var sword = Text1.value;
+    var check = database.indexOf(sword, 0);
+    return check
+}
+
+//新規作成
+function NewPage() {
+    var pagename = Text2.value;
+//    window.confirm(pagename);
+    if (pagename) {
+        open(pagename);
+    }
+    Text2.value = '';
+}
+//リネーム
+function ReNamePage() {
+
+    var srcPagename = getPageName();
+    var dstPagename = Text2.value;
+
+    // 「OK」時の処理開始 ＋ 確認ダイアログの表示
+    if (window.confirm(dstPagename + ' にリネームしますか？'))
+    {
+
+        var srcFilepath = getFilePath(srcPagename);
+        var dstFilepath = getFilePath(dstPagename);
+    
+        fso.MoveFile(srcFilepath, dstFilepath);
+        window.alert(srcPagename + ' を ' + dstPagename + ' にリネームしました。');         
+        open(dstPagename);
+    }
+    else {
+        window.alert('キャンセルされました。'); // 警告ダイアログを表示
+    }
+    Text2.value = '';
+}
+
+//削除
+function DeletePage() {
+
+    var pagename = getPageName();
+
+    // 「OK」時の処理開始 ＋ 確認ダイアログの表示
+    if (window.confirm(pagename + ' を削除しますか？')) {
+
+        var pagename = getPageName();
+        var filepath = getFilePath(pagename);
+
+        fso.DeleteFile(filepath);
+        window.alert(pagename + ' を削除しました。'); 
+        open('トップページ');
+    }
+    else {
+        window.alert('キャンセルされました。'); // 警告ダイアログを表示
+    }
+    Text2.value = '';
+}
+
+</script>
+
+</head>
+<body onload="javascript:open('トップページ')">
+    <table width="100%" border="0">
+        <tr valign="top">
+            <td class="style1">
+                <h1 id="headerH1">トップページ</h1>
+            </td>
+            <td id="TDheaderH1" align="right">
+                <span><a href="javascript:open('トップページ')">トップページ</a>|</span>
+                <span id="editLink"><a href="javascript:editCurrentPage()" >編集</a>|</span>
+                <span><a href="javascript:openIndexPage()">ページ一覧</a>|</span>
+                <input id="Text1" type="text" /> <a href="javascript:FindIndexPage()">検索</a>
+            </td>
+        </tr>
+    </table>
+    <hr id=" br1" />
+    <div id="content"></div>       
+    <hr id="br2" />
+    <div id="FileName" align=left ></div>
+    <div id="DateCreated" align=left ></div>
+    <div id="DateLastModified" align=left ></div>
+    <hr id="br2" />
+    <div id="history" align=left ></div>       
+    <table width="100%" border="0">
+        <tr valign="bottom">
+            <td align="right">
+                <span>&nbsp;<input id="Text2" type="text" /> |</span>
+                <span><a href="javascript:NewPage()">新規作成</a>|</span>
+                <a href="javascript:ReNamePage()">リネーム</a><span>|</span>
+                <a href="javascript:DeletePage()">削除</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
