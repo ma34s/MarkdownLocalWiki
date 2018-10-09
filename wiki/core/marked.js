@@ -460,7 +460,8 @@ var inline = {
   code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
-  text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/
+  text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/,
+  WindowsSV:  /^(\\\\.+?[\s|\n|\b|$]|^(\\\\.+))/ //HTA対応による改造　windows 汎用命名規則 (UNC)より先頭が\\だとダイレクトリンク
 };
 
 inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -567,6 +568,18 @@ InlineLexer.prototype.output = function(src) {
     , cap;
 
   while (src) {
+
+     //HTA対応
+    //WindowsSV 
+    if (cap = this.rules.WindowsSV.exec(src)) {
+//      alert("cap[0] " + cap[0]);
+      src = src.substring(cap[0].length);
+      text = cap[0];
+      href = text;
+      out += this.renderer.link(href, null, text);
+      continue;
+    } 
+
     // escape
     if (cap = this.rules.escape.exec(src)) {
       src = src.substring(cap[0].length);
@@ -685,6 +698,7 @@ InlineLexer.prototype.output = function(src) {
       out += this.renderer.text(escape(this.smartypants(cap[0])));
       continue;
     }
+
 
     if (src) {
       throw new

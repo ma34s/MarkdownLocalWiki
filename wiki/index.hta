@@ -5,7 +5,7 @@
 
 
 <link rel="stylesheet" href="./core/github.css">
-<script src="./core/jquery-1.12.0.js"></script>
+<script src="./core/jquery-1.12.4.js"></script>
 <script src="./core/marked.js"></script>
 <script>
 
@@ -26,8 +26,35 @@ function open(pagename){
         return edit(pagename);
     }
 
+
+//    var renderer = new marked.Renderer();
+//    renderer.link = function(href, title, text) {
+//     renderer.link = function (text, level) {
+//    alert("text=" +  text + "level" + level );
+//      alert(href  + "  " +  title + "  " + text );
+//    };
+//    renderer.heading = function (text, level) {
+//	alert("text=" +  text + "level" + level );
+//
+//    var escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+//      return '<h' + level + '><a name="' +
+//                escapedText +
+//                 '" class="anchor" href="#' +
+//                 escapedText +
+//                 '"><span class="header-link"></span></a>' +
+//                  text + '</h' + level + '>';
+//    };
+
+
+//    alert(marked('# heading+', { renderer: renderer }));
+//    var html = marked(content, { renderer: renderer });
+
+
     //いわゆるmarked.jsを使用（一部改造）
     var html = marked(content);
+
+
+
 
     //ファイル名、更新日時等を付与
     id('FileName').innerText = getFilePathAndName(pagename);
