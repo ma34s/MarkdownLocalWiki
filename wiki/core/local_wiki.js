@@ -114,6 +114,7 @@ function open(pagename){
     setPageName(pagename);
     setContent(html);
     showEditLink();
+	createToc();
 }
 
 //履歴保存
@@ -284,6 +285,20 @@ function openIndexPage(){
     var myFiles = getPageList();
     viweCreatedList(myFiles,openIndexPageName);
 }
+
+//サイドのTOC作成
+function createToc(){
+    var myFiles = getPageList();
+    var list = [];
+    for(var i = 0; i < myFiles.length; i++){
+        list.push(' - [' + myFiles[i] + '](' + myFiles[i] + ')' );
+    }
+    var content = list.join("\r\n");
+    var html = marked(content);
+    id('toc').innerHTML = html;
+    fixed_side_toc();
+}
+
 
 //ページ名を指定して、該当するマークダウン（.md)のパス名を取得する
 function getFilePath(pagename){
