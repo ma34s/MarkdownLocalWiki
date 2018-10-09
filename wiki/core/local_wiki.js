@@ -245,13 +245,6 @@ function getPageIndex(){
     return myFiles;
 }
 
-//ページ一覧画面を表示する
-function openIndexPage(){
-    var openIndexPageName = '【ページ一覧】';
-    var myFiles = getPageIndex();
-    viweCreatedList(myFiles,openIndexPageName);
-}
-
 function viweCreatedList(myFiles,title){
     var list = [];
     list.push('|ファイル名|作成日|更新日|');
@@ -284,6 +277,12 @@ function viweCreatedList(myFiles,title){
     showEditLink();
 }
 
+//ページ一覧画面を表示する
+function openIndexPage(){
+    var openIndexPageName = '【ページ一覧】';
+    var myFiles = getPageIndex();
+    viweCreatedList(myFiles,openIndexPageName);
+}
 
 //ページ名を指定して、該当するマークダウン（.md)のパス名を取得する
 function getFilePath(pagename){
@@ -364,36 +363,7 @@ function FindIndexPage() {
             }
         }
     }
-    
-    var list = [];
-    list.push('|ファイル名|作成日|更新日|');
-    list.push('|:-|:-:|:-:|');
-    for (var i = 0; i < myFiles.length; i++) {
-//        list.push('<li><a href="javascript:open(\'' + myFiles[i] + '\');">' + myFiles[i] + '</a></li>');
-//        list.push('<li>[' + myFiles[i] + '](' + myFiles[i] + ')</li>' );
-
-        list.push('|[' + myFiles[i] + '](' + myFiles[i] + ')|' + getDateCreated(myFiles[i]) +'|' + getDateLastModified(myFiles[i]) +'|' );
-
-    }
-    var content = list.join("\r\n");
-    //ファイル保存
-    var filepath = getFilePath(　FindIndexPageName  + Text1.value　);
-    var file = fso.createTextFile(filepath);
-    file.write(content);
-    file.Close();
-
-    //いわゆるmarked.jsを使用（一部改造）
-    var html = marked(content);
-
-    //表示履歴を格納、表示
-    setHistory( FindIndexPageName  + Text1.value );
-    getHistory();
-    
-    //表示
-    setPageName( FindIndexPageName  + Text1.value );
-    setContent( html );
-    showEditLink();
-
+    viweCreatedList(myFiles,FindIndexPageName  + Text1.value);
 }
 
 //ページ名を指定してページを開き、検索文字がヒットしたかチェックする
