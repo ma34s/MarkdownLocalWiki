@@ -229,8 +229,8 @@ function save(pagename){
 
 }
 
-//ページ一覧画面を表示する
-function getPageIndex(){
+//ページのリストを取得する
+function getPageList(){
     var enuFiles = new Enumerator(oBaseFolder.Files);
    
     var myFiles = [];
@@ -245,6 +245,7 @@ function getPageIndex(){
     return myFiles;
 }
 
+//ページ一覧/検索画面を表示する
 function viweCreatedList(myFiles,title){
     var list = [];
     list.push('|ファイル名|作成日|更新日|');
@@ -280,7 +281,7 @@ function viweCreatedList(myFiles,title){
 //ページ一覧画面を表示する
 function openIndexPage(){
     var openIndexPageName = '【ページ一覧】';
-    var myFiles = getPageIndex();
+    var myFiles = getPageList();
     viweCreatedList(myFiles,openIndexPageName);
 }
 
