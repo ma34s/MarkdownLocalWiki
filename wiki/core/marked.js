@@ -870,6 +870,7 @@ Renderer.prototype.del = function(text) {
 //仕様追加　テキストファイルを開く
 //仕様追加　ファイルサーバ(\\サーバ名)を開く
 //仕様変更　target="_blank" を追加し、テキストファイルを開く以外はブラウザへ誘導
+//仕様変更　target="_blank" を追加し、拡張子(.xxx)付ファイルはwindowsの制御にまかせたファイルを開く
 
 Renderer.prototype.link = function(href, title, text) {
   if (this.options.sanitize) {
@@ -904,6 +905,16 @@ Renderer.prototype.link = function(href, title, text) {
       out += '>' + text + '</a>';
 
 //      alert("HTA対応による改造　サーバ対応 " + out + "  text=" + text + "  title=" + title );
+
+  }else if( href.match(/\.([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/ig)){
+
+//      alert("HTA対応による改造　各種ファイル拡張子対応 " + out + "  text=" + text + "  title=" + title );
+
+      var out = '<a href="' + href + '"' + ' target="_blank" '; ;
+      if (title) {
+        out += ' title="' + title + '"';
+      }
+      out += '>' + text + '</a>';
 
   }else{
       var out =  "<a href='javascript:open(\"" + href + "\")'>" + text + "</a> ";
