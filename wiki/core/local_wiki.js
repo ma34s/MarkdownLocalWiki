@@ -191,6 +191,12 @@ function getDateLastModified(pagename) {
 function edit(pagename){
     var content = getContent(pagename);
 
+    if(checkPageName(pagename) == false)
+    {//Out of work directory
+        window.alert("page name is invalid : "+pagename); // 警告ダイアログを表示
+        return;
+    }
+
 //    var html =
 //           "<form  onsubmit='save(\"" + pagename + "\"); return false;'>"
 //         + "<textarea cols='120' rows='30' id='textarea' wrap='off'>" + content + "</textarea><br />"
@@ -216,6 +222,26 @@ function editCurrentPage(){
     edit(pagename);
 }
 
+//ページ名チェック
+//@todo ファイル名/フォルダ名のWinsows禁則文字チェック
+function checkPageName(pagename)
+{
+    var filepath = getFilePath(pagename);
+    var absPath = fso.GetAbsolutePathName(filepath);
+    if(absPath.indexOf(oBaseFolder.Path+"\\")<0)
+    {//Out of work directory
+       return false;
+    }
+
+    //改修箇所が多くなるので、現時点ではSubdirサポートしない
+    absPath = absPath.replace(oBaseFolder.Path+"\\","");
+    var dirs = absPath.split("\\");
+    if(dirs.length>1)
+    {
+        return false;
+    }
+    return true;
+}
 //フォームのテキストエリアの中身を、指定したページのコンテンツとして保存する
 function save(pagename){
 
@@ -224,7 +250,10 @@ function save(pagename){
     var content = id('textarea').innerText;
 
     var filepath = getFilePath(pagename);
-    var file = fso.createTextFile(filepath);
+    if(checkPageName(pagename) == false)
+    {//Out of work directory
+        return;
+    }
     utf8_saveToFile(filepath, content);
     open(pagename);
 
