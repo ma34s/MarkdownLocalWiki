@@ -231,7 +231,7 @@ function save(pagename){
 }
 
 //ページのリストを取得する
-function getPageList(){
+function getPageList(isToc){
     var enuFiles = new Enumerator(oBaseFolder.Files);
    
     var myFiles = [];
@@ -240,7 +240,18 @@ function getPageList(){
             var ExtensionName = fso.GetExtensionName(FilePath); // 拡張子を取得
             var BaseName = fso.GetBaseName(FilePath); // ベースネームを取得
             if(ExtensionName == "md"){ // 拡張子がmdだったら
-                myFiles.push(BaseName);
+                if( isToc == true ) 
+                {//目次作成時に、トップと一覧ページは除外する
+                    if( BaseName == CONFIG.topPage)
+                    {
+                    	continue;
+                    }
+                    if( BaseName == VALUES.pagelistTitle)
+                    {
+                    	continue;
+                    }
+                }
+                    myFiles.push(BaseName);
             }
     }
     return myFiles;
@@ -282,13 +293,13 @@ function viweCreatedList(myFiles,title){
 //ページ一覧画面を表示する
 function openIndexPage(){
     var openIndexPageName = VALUES.pagelistTitle;
-    var myFiles = getPageList();
+    var myFiles = getPageList(false);
     viweCreatedList(myFiles,openIndexPageName);
 }
 
 //サイドのTOC作成
 function createToc(){
-    var myFiles = getPageList();
+    var myFiles = getPageList(true);
     var list = [];
     for(var i = 0; i < myFiles.length; i++){
         list.push(' - [' + myFiles[i] + '](' + myFiles[i] + ')' );
