@@ -109,14 +109,22 @@ function getDateLastModified(pagename) {
 function edit(pagename){
     var content = getContent(pagename);
 
+//    var html =
+//           "<form  onsubmit='save(\"" + pagename + "\"); return false;'>"
+//         + "<textarea cols='120' rows='30' id='textarea' wrap='off'>" + content + "</textarea><br />"
+//         + "<input type='submit' value='保存'><br />"
+//         + "</form>";
+//編集方法の修正 textareaへの格納はフォーム生成後のtextareaへテキスト入力
     var html =
            "<form  onsubmit='save(\"" + pagename + "\"); return false;'>"
-         + "<textarea cols='120' rows='30' id='textarea' wrap='off'>" + content + "</textarea><br />"
+         + "<textarea cols='120' rows='30' id='textarea' wrap='off'>" + "</textarea><br />"
          + "<input type='submit' value='保存'><br />"
          + "</form>";
 
+
     setPageName(pagename);
     setContent(html);
+    id('textarea').innerText = content;
     hideEditLink();
 }
 
@@ -129,7 +137,10 @@ function editCurrentPage(){
 //フォームのテキストエリアの中身を、指定したページのコンテンツとして保存する
 function save(pagename){
 
-    var content = id('textarea').value;
+//編集方法の修正 textareaへの格納はフォーム生成後のtextareaへテキスト入力
+//    var content = id('textarea').value;
+    var content = id('textarea').innerText;
+
     var filepath = getFilePath(pagename);
     var file = fso.createTextFile(filepath);
     file.write(content);
