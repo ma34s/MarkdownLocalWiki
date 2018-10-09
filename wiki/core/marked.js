@@ -903,7 +903,7 @@ Renderer.prototype.link = function(href, title, text) {
       }
       out += '>' + text + '</a>';
 
-//      alert("HTA対応による改造　サーバ対応 " + out);
+//      alert("HTA対応による改造　サーバ対応 " + out + "  text=" + text + "  title=" + title );
 
   }else{
       var out =  "<a href='javascript:open(\"" + href + "\")'>" + text + "</a> ";

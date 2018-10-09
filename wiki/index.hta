@@ -3,6 +3,7 @@
 <head>
 <hta:application navigable="yes">
 
+
 <link rel="stylesheet" href="./core/github.css">
 <script src="./core/jquery-1.12.0.js"></script>
 <script src="./core/marked.js"></script>
@@ -30,8 +31,8 @@ function open(pagename){
 
     //ファイル名、更新日時等を付与
     id('FileName').innerText = getFilePathAndName(pagename);
-    id('DateCreated').innerText = getDateCreated(pagename);
-    id('DateLastModified').innerText = getDateLastModified(pagename);
+    id('DateCreated').innerText = "作成日時:" + getDateCreated(pagename);
+    id('DateLastModified').innerText = "更新日時:" + getDateLastModified(pagename);
 
     //表示履歴
     setHistory(pagename);
@@ -75,7 +76,7 @@ function getHistory() {
     id('history').innerHTML = html;
 }
 
-//テキストファイル名をフルパスで取得
+//マークダウン（md)ファイル名をフルパスで取得
 function getFilePathAndName(pagename){
     var s = '';
     var filepath = getFilePath(pagename);
@@ -90,7 +91,7 @@ function getDateCreated(pagename){
    var filepath = getFilePath(pagename);
    var f = fso.GetFile(filepath);
    var CreateDate = new Date(f.DateCreated);
-   s += "作成日時:" + CreateDate.toLocaleDateString() + " " + CreateDate.toLocaleTimeString();  
+   s += CreateDate.toLocaleDateString() + " " + CreateDate.toLocaleTimeString();  
    return(s);
 
 }
@@ -100,7 +101,7 @@ function getDateLastModified(pagename) {
     var filepath = getFilePath(pagename);
     var f = fso.GetFile(filepath);
     var ModDate = new Date(f.DateLastModified);
-    s += "更新日時:" + ModDate.toLocaleDateString() + " " + ModDate.toLocaleTimeString();
+    s += ModDate.toLocaleDateString() + " " + ModDate.toLocaleTimeString();
     return (s);
 }
 
@@ -148,50 +149,51 @@ function openIndexPage(){
             var FilePath = enuFiles.item(); 
             var ExtensionName = fso.GetExtensionName(FilePath); // 拡張子を取得
             var BaseName = fso.GetBaseName(FilePath); // ベースネームを取得
-            if(ExtensionName == "txt"){ // 拡張子がtxtだったら
+            if(ExtensionName == "md"){ // 拡張子がmdだったら
                 myFiles.push(BaseName);
             }
     }
     
     var list = [];
-    var list2 = [];
-
+    list.push('|ファイル名|作成日|更新日|');
+    list.push('|:-|:-:|:-:|');
+    //ファイル保存用、表示用のフォーマット変換
     for(var i = 0; i < myFiles.length; i++){
-        list.push('<li><a href="javascript:open(\'' + myFiles[i] + '\');">' + myFiles[i] + '</a></li>');
-        list2.push("<li>[[" + myFiles[i] + "]]</li>" );
+//        list.push('<li><a href="javascript:open(\'' + myFiles[i] + '\');">' + myFiles[i] + '</a></li>');
+//        list.push('<li>[' + myFiles[i] + '](' + myFiles[i] + ')</li>' );
+        list.push('|[' + myFiles[i] + '](' + myFiles[i] + ')|' + getDateCreated(myFiles[i]) +'|' + getDateLastModified(myFiles[i]) +'|' );
     }
 
-    var content = list.join("\n");
-    var content2 = list2.join("\r\n");
+    var content = list.join("\r\n");
 
     //ファイル保存
     var filepath = getFilePath( openIndexPageName );
     var file = fso.createTextFile(filepath);
-    file.write(content2);
+    file.write(content);
     file.Close();
 
-    //履歴格納
-    content = '<pre>' + content + '</pre>';
-    //ファイル名、更新日時等を付与
-    content = content + getDateCreated( openIndexPageName );
+
+    //いわゆるmarked.jsを使用（一部改造）
+    var html = marked(content);
+
     //表示履歴
     setHistory( openIndexPageName );
     getHistory();
 
     //表示
     setPageName( openIndexPageName );
-    setContent( content );
+    setContent( html );
     showEditLink();
 
 }
 
-//ページ名を指定して、該当するテキストファイルのパス名を取得する
+//ページ名を指定して、該当するマークダウン（.md)のパス名を取得する
 function getFilePath(pagename){
-    var filename = pagename + ".txt";
+    var filename = pagename + ".md";
     return oBaseFolder.Path + "\\" +  filename;
 }
 
-//ページ名を指定して、該当するテキストファイルの中身を取得する
+//ページ名を指定して、該当するマークダウンファイルの中身を取得する
 function getContent(pagename){
     var content = '';
     var filepath = getFilePath(pagename);
@@ -249,7 +251,7 @@ function FindIndexPage() {
         var ExtensionName = fso.GetExtensionName(FilePath); // 拡張子を取得
         var BaseName = fso.GetBaseName(FilePath); // ベースネームを取得
 
-        if (ExtensionName == "txt") { // 拡張子がtxtだったら
+        if (ExtensionName == "md") { // 拡張子がmdだったら
             //ファイル名検索
             var database = FilePath;
             var sword = Text1.value;
@@ -270,31 +272,32 @@ function FindIndexPage() {
     }
     
     var list = [];
-    var list2 = [];
+    list.push('|ファイル名|作成日|更新日|');
+    list.push('|:-|:-:|:-:|');
     for (var i = 0; i < myFiles.length; i++) {
-        list.push('<li><a href="javascript:open(\'' + myFiles[i] + '\');">' + myFiles[i] + '</a></li>');
-        list2.push("<li>[[" + myFiles[i] + "]]</li>" );
+//        list.push('<li><a href="javascript:open(\'' + myFiles[i] + '\');">' + myFiles[i] + '</a></li>');
+//        list.push('<li>[' + myFiles[i] + '](' + myFiles[i] + ')</li>' );
+
+        list.push('|[' + myFiles[i] + '](' + myFiles[i] + ')|' + getDateCreated(myFiles[i]) +'|' + getDateLastModified(myFiles[i]) +'|' );
+
     }
     var content = list.join("\r\n");
-    var content2 = list2.join("\r\n");
-
     //ファイル保存
     var filepath = getFilePath(　FindIndexPageName  + Text1.value　);
     var file = fso.createTextFile(filepath);
-    file.write(content2);
+    file.write(content);
     file.Close();
 
-    //履歴格納
-    content = '<pre>' + content + '</pre>';
-    //ファイル名、更新日時等を付与
-    content = content + getDateCreated( FindIndexPageName  + Text1.value );
-    //表示履歴
+    //いわゆるmarked.jsを使用（一部改造）
+    var html = marked(content);
+
+    //表示履歴を格納、表示
     setHistory( FindIndexPageName  + Text1.value );
     getHistory();
     
     //表示
     setPageName( FindIndexPageName  + Text1.value );
-    setContent( content );
+    setContent( html );
     showEditLink();
 
 }
