@@ -546,20 +546,27 @@ function openTopPage(){
     open(CONFIG.topPage);
 }
 
+function makeLink(item,func,text)
+{
+    id(item).innerHTML =
+    '<a href="javascript:'+func+'" id="'+text+'A">'+
+    text+'</a>|';
+}
+
 function initNavigation(){
     marked.setOptions({
         image_base: CONFIG.base_dirctory +"/"
     })
 
-
-    id('topPageLinkA').innerText = CONFIG.topPage;
-    id('editLinkA').innerText = VALUES.editTitle;
-    id('PagelistLinkA').innerText = VALUES.pagelistTitle;
-    id('SarchLinkA').innerText = VALUES.sarchTitle;
-
-    id('newPageLinkA').innerText = VALUES.newPageTitle;
-    id('renamePageLinkA').innerText = VALUES.reNamePageTitle;
-    id('deletePageLinkA').innerText = VALUES.deletePageTitle;
+    //editLink
+    makeLink('topPageLink','openTopPage()',CONFIG.topPage);
+    makeLink('editLink','editCurrentPage()',VALUES.editTitle);
+    makeLink('PagelistLink','openIndexPage()',VALUES.pagelistTitle);
+    makeLink('SarchLink','FindIndexPage()',VALUES.sarchTitle);
+    makeLink('newPageLink','NewPage()',VALUES.newPageTitle);
+    makeLink('renamePageLink','ReNamePage()',VALUES.reNamePageTitle);
+    makeLink('deletePageLink','DeletePage()',VALUES.deletePageTitle);
+    
 
     if(CONFIG.showHistory == false)
     {
