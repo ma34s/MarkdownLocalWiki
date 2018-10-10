@@ -364,7 +364,10 @@ function getContent(pagename){
 
 //メニューの「編集」リンクを表示する
 function showEditLink() {
-    id('editLink').style.display = "inline";
+    if(CONFIG.read_only_mode == false)
+    {
+        id('editLink').style.display = "inline";
+    }
 }
 
 //メニューの「編集」リンクを非表示にする
