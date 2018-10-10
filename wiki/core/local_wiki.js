@@ -576,5 +576,14 @@ function initNavigation(){
     {
         id('HRfileinfo').style.display = "none"
     }
+    if(CONFIG.read_only_mode == true)
+    {
+        id('editLink').style.display = "none";
+        id('newPageLink').style.display = "none";
+        id('renamePageLink').style.display = "none";
+        id('edittext2').style.display = "none";
+        id('deletePageLink').style.display = "none";
+        
+    }
     openTopPage();
 }

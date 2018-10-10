@@ -5,7 +5,8 @@ var CONFIG = {
     topPage: 'top_page',
     base_dirctory: './doc',
     showHistory: true,
-    showFileInfo: true
+    showFileInfo: true,
+    read_only_mode: false
 }
 
 /*------------------------------------------------------------------**
