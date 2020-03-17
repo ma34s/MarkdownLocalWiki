@@ -197,23 +197,26 @@ function edit(pagename){
         return;
     }
 
-//    var html =
-//           "<form  onsubmit='save(\"" + pagename + "\"); return false;'>"
-//         + "<textarea cols='120' rows='30' id='textarea' wrap='off'>" + content + "</textarea><br />"
-//         + "<input type='submit' value='保存'><br />"
-//         + "</form>";
-//編集方法の修正 textareaへの格納はフォーム生成後のtextareaへテキスト入力
     var html =
-           "<form  onsubmit='save(\"" + pagename + "\"); return false;'>"
-         + "<textarea cols='120' rows='30' id='textarea' wrap='off'>" + "</textarea><br />"
+           "<div id='editTextarea'>"
+         + "<form  onsubmit='save(\"" + pagename + "\"); return false;'>"
+         + "<textarea cols='120' rows='30' id='textarea' wrap='off' onkeyup='updateEditPreview()'>" + "</textarea><br />"
          + "<input type='submit' value='保存'><br />"
-         + "</form>";
-
+         + "</form>"
+         + "</div>"
+         + "<div id='editPreview'></div>";
 
     setPageName(pagename);
     setContent(html);
     id('textarea').innerText = content;
+    updateEditPreview();
     hideEditLink();
+}
+
+//編集ページのプレビューを更新する
+function updateEditPreview() {
+    var content = id('textarea').innerText;
+    id('editPreview').innerHTML = marked(content);
 }
 
 //いま見ているページを編集する
