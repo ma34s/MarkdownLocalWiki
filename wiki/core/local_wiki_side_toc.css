@@ -6,18 +6,24 @@ body{font-family:"メイリオ", Meiryo,"ヒラギノ角ゴPro W3", "Hiragino Ka
 p{font-weight:bold;font-size:20px; color:#fff; padding:10px; line-height:1.5; margin:0;}
 */
 
-#header{width:1000px; margin:0 auto 10px;background:#a0a0a0; padding:5px 0px 0px 20px;}
+#header{width:100%; margin:0 auto 10px; background:#a0a0a0; padding:5px 0px 0px 20px; position:fixed;}
 
-#contents{width:1000px; margin:0 auto 30px; overflow:hidden;}
+#contents{ width:auto; margin:0 auto 30px; padding: 100px 0px; overflow:hidden;}
 
-#main{width:720px; float:right;}
+#main{width:80%; float:right;}
 
-#sideWrap{width:260px; float:left;border-bottom:2px solid red;}
+#sideWrap{width:20%; float:left;position: fixed}
 
-#side{width:260px; background:#eee;}
+#side{width:auto;}
 
 #side p{color:#333;font-size:15px; border:1px solid #ccc;}
 
 #footer{background:#a0a0a0;padding:20px 0; height:100px;}
 
 #headerH1{padding:0px 0px 0px 0px;margin:0 0 0 0;}
+
+#editTextarea{ width:50%; float:left;
+}
+#textarea{ width:90%; height:70vh;}
+
+#editPreview{ width:50%; height:80vh; float:right; overflow:scroll;}

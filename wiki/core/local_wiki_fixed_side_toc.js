@@ -9,9 +9,10 @@ function fixed_side_toc() {
 	var mainH = mainArea.height();
 	var sideH = sideWrap.height();
 	
+	return;
 	
 	if(sideH < mainH) { 
-		sideWrap.css({"height": mainH,"position": "relative"});
+		sideWrap.css({"height": mainH});
 		var sideOver = wd.height()-sideArea.height();
 		var starPoint = sideArea.offset().top + (-sideOver);
 		var breakPoint = sideArea.offset().top + mainH;

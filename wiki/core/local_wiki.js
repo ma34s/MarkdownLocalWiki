@@ -200,7 +200,7 @@ function edit(pagename){
     var html =
            "<div id='editTextarea'>"
          + "<form  onsubmit='save(\"" + pagename + "\"); return false;'>"
-         + "<textarea cols='120' rows='30' id='textarea' wrap='off' onkeyup='updateEditPreview()'>" + "</textarea><br />"
+         + "<textarea id='textarea' wrap='off' onkeyup='updateEditPreview()'>" + "</textarea><br />"
          + "<input type='submit' value='保存'><br />"
          + "</form>"
          + "</div>"
